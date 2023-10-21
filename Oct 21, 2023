@@ -1,0 +1,181 @@
+# FINAL PROJECT
+import sympy
+from sympy import *
+
+#Make sure that the user enters a valid option (from option A to F)
+while True:
+    Options = input("Options:\n"
+                    "A = Derivative\n"
+                    "B = Integral\n"
+                    "C = Definite Integral\n"
+                    "D = Elimination of Arbitrary Constant (Except Functions with Parameters)\n"
+                    "E = Initial Value Problems\n"
+                    "F = Solving ODE\n"
+                    "NOTE: If you wish to exit, enter 'no'\n"
+                    "What do you want to determine?: ")
+
+    if Options in ["A", "B", "C", "D", "E", "F"]:
+        pass  # Exit the loop when a valid option is entered
+    elif Options == 'no':
+        print("Thank you for using CALC-SIFY!")
+        break  # Exit the program
+    else:
+        print("Invalid option. Please enter a valid option (A to F).")
+
+    if Options == "A":
+        # Derivative method
+        x, y = symbols('x, y')
+        Function = input(
+            "Example format:\n"
+            "2*x instead of 2x\n"
+            "2*x**2 instead of 2x^2\n"
+            "Enter function you want to derive:")
+        print(f"Function : {Function}")
+
+        # Additional input for the number of times to take the derivative
+        n = int(input("Enter the required number of differentiation: "))
+
+        # Use sympy.Derivative() method
+        F_Diff = 0
+        for i in range(n):
+            while True:
+                Differential_variable = input(
+                    f"Enter the differentiation variable for differentiation {i + 1} (x, y, or x,y): ")
+
+                if Differential_variable in ['x', 'y', 'x,y']:
+                    break  # Exit the loop when a valid option is entered
+                else:
+                    print("Invalid differentiation variable. Please enter 'x,' 'y,' or 'x,y.'")
+
+            if Differential_variable == 'x':
+                F_Diff = Derivative(Function, x)
+            elif Differential_variable == 'y':
+                F_Diff = Derivative(Function, y)
+            elif Differential_variable == 'x,y':
+                F_Diff = Derivative(Function, (x, y))
+            Function_Derivative = F_Diff.doit()
+            print(f"Derivative {i + 1}: {Function_Derivative}")
+            Function = F_Diff
+
+    elif Options == "B":
+        import sympy
+        from sympy import *
+
+        x, y = sympy.symbols('x,y')
+        Function = input("Enter the function: ")
+        print(f"Function: {Function}")
+
+        # Additional input for the number of times to take the integral
+        n = int(input("Enter the required number of integration: "))
+
+        F_Integral = 0
+        for i in range(n):
+            while True:
+                integration_variable = input(f"Enter the integration variable for integration {i + 1} (x, y, or x,y): ")
+
+                if integration_variable in ['x', 'y', 'x,y']:
+                    break  # Exit the loop when a valid option is entered
+                else:
+                    print("Invalid integration variable. Please enter 'x,' 'y,' or 'x,y.'")
+
+            if integration_variable == 'x':
+                F_Integral = Integral(Function, x)
+            elif integration_variable == 'y':
+                F_Integral = Integral(Function, y)
+            elif integration_variable == 'x,y':
+                F_Integral = Integral(Function, (x, y))
+            Function_Integral = F_Integral.doit()
+            print(f"Integral {i + 1}: {Function_Integral} + C")
+            Function = F_Integral
+
+
+    elif Options == "C":
+        x, y = symbols('x,y')
+        Function = input("Enter function: ")
+        while True:
+            try:
+                a = float(input("Enter lower limit: "))
+                break  # Exit the loop when a valid float is entered
+            except ValueError:
+                print("Invalid input. Please enter a valid numeric value for the lower limit.")
+        while True:
+            try:
+                b = float(input("Enter upper limit: "))
+                break  # Exit the loop when a valid float is entered
+            except ValueError:
+                print("Invalid input. Please enter a valid numeric value for the upper limit.")
+        intgrt = integrate(Function, (x, a, b))
+        print("After integration: {}".format(intgrt))
+
+
+    elif Options == "D":
+        # Elimination of Arbitrary Constant method
+        x, y = symbols('x, y')
+        Function = input("Enter the given function (Function should be in the format f(x) = 0): ")
+        print(f"Function : {Function}")
+
+        # Ask user the number of constants (EXCLUDE PARAMETERS)
+        n = int(input("Enter the number of Arbitrary Constants: "))
+
+        # Use sympy.Derivative() method
+        F_Diff = 0
+        for i in range(n):
+            Differential_variable = input(f"Enter the differentiation variable for differentiation {i + 1} (x, y, or x,y): ")
+
+            if Differential_variable == 'x':
+                F_Diff = Derivative(Function, x)
+            elif Differential_variable == 'y':
+                F_Diff = Derivative(Function, y)
+            elif Differential_variable == 'x,y':
+                F_Diff = Derivative(Function, (x, y))
+            else:
+                print(f"Invalid differential variable for differentiation {i + 1}. Skipping this differentiation.")
+                continue
+            Function_Derivative = F_Diff.doit()
+            print(f"Derivative {i + 1}: {Function_Derivative}")
+            Function = F_Diff
+
+    elif Options == "E":
+        from sympy import symbols, Eq, Function, dsolve, sympify
+
+        # Define the function symbol
+        f = symbols("f", cls=Function)
+        x = symbols("x")
+
+        def main():
+            print("Welcome to the Differential Equation Solver")
+
+            # Input the function as a string
+            Func = input("Enter the function (in terms of f(x)): ")
+            func_expr = sympify(Func)
+
+            # Input the order of the derivative
+            order = int(input("Enter the order of the derivative (e.g., 1 for y', 2 for y'', etc.): "))
+
+            # Define the differential equation
+            if order == 1:
+                eq = Eq(f(x).diff(x), func_expr)
+            else:
+                eq = Eq(f(x).diff(x, order), func_expr)
+
+            # Solve the differential equation
+            solutions = dsolve(eq, [f(x)])
+
+            print("Solutions:")
+            print(solutions)
+
+            # Check if it's an initial value problem
+            initial_condition = input("Is this an initial value problem? (yes/no): ").lower()
+
+            if initial_condition == "yes":
+                x0 = float(input("Enter the initial x value (x0): "))
+                y0 = float(input("Enter the initial y value (y0): "))
+
+                # Solve the differential equation with initial conditions
+                solutions_with_ics = dsolve(eq, [f(x)], ics={f(x0): y0})
+
+                print("Solutions with initial conditions:")
+                print(solutions_with_ics)
+        if __name__ == "__main__":
+            main()
+
